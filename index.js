@@ -16,10 +16,15 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST']
+    origin: "*",  // Разрешаем все домены (для простоты). В проде можно указать конкретный фронтенд
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
+app.use(cors({
+  origin: "*",  // Или конкретный URL фронтенда, например "https://твой-фронтенд.onrender.com"
+  credentials: true
+}));
 
 app.use(cors());
 app.use(express.json());
@@ -260,6 +265,6 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Сервер запущен на порту ${PORT}`);
 });
